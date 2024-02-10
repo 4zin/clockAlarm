@@ -1,7 +1,11 @@
 import { Clock } from "./components/Clock"
+import { SetAlarm } from "./components/SetAlarm"
 
 export default function Page() {
     return (
-        <Clock />
+        <main>
+            <Clock />
+            <SetAlarm />
+        </main>
     )
 }
