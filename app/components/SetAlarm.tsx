@@ -1,30 +1,35 @@
 'use client'
 
-import { useState } from 'react'
+
+import { useState, useEffect, useContext } from 'react'
+import { AlarmContext } from './context/ClockContext'
 
 export const SetAlarm = () => {
 
-    const [hour, setHour] = useState<string>('Hour')
-    const [minutes, setMinutes] = useState<string>('Minutes')
-    const [amPmOptions, setAmPmOptions] = useState<string>('AM-PM')
 
+    const alarmContext = useContext(AlarmContext)
 
-    const fixNumber = (value: number[]): (string | number)[] => {
-        return value.map(hour => (hour < 10 ? '0' + hour : hour));
-    };
-
-    const hourNumber = fixNumber(Array.from(Array(13).keys()))
-    const minuteNumber = fixNumber(Array.from(Array(60).keys()))
-
-    const hourHandler = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        setHour(event.target.value)
+    if (alarmContext === undefined) {
+        throw new Error('alarmContext must be used within AlarmProvider')
     }
-    const minuteHandler = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        setMinutes(event.target.value)
-    }
-    const amPmHandler = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        setAmPmOptions(event.target.value)
-    }
+
+    const { hour,
+        minutes,
+        amPmOptions,
+        alarmTime,
+        setAlarmHandler,
+        hourNumber,
+        minuteNumber,
+        hourHandler,
+        minuteHandler,
+        amPmHandler, } = alarmContext
+
+
+
+    useEffect(() => {
+        console.log('Alarma seteada a las', alarmTime);
+    }, [alarmTime])
+
 
 
     return (
@@ -52,7 +57,11 @@ export const SetAlarm = () => {
             </div>
 
             <div className='flex justify-center'>
-                <button>Set Alarm</button>
+                <button
+                    onClick={setAlarmHandler}
+                >
+                    Set Alarm
+                </button>
             </div>
         </div>
     )

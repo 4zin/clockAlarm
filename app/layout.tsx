@@ -1,5 +1,6 @@
 import '../styles/globals.css';
 import { Montserrat } from 'next/font/google';
+import { AlarmProvider } from './components/context/ClockContext';
 
 const monteserrat = Montserrat({ subsets: ['latin'], weight: ['400', '700'] });
 
@@ -15,7 +16,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${monteserrat.className} antialiased`}>{children}</body>
+      <body className={`${monteserrat.className} antialiased`}>
+        <AlarmProvider>
+          {children}
+        </AlarmProvider>
+      </body>
     </html>
   )
 }
