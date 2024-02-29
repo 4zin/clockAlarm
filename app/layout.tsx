@@ -2,7 +2,7 @@ import '../styles/globals.css';
 import { Montserrat } from 'next/font/google';
 import { AlarmProvider } from './components/context/ClockContext';
 
-const monteserrat = Montserrat({ subsets: ['latin'], weight: ['400', '700'] });
+const monteserrat = Montserrat({ subsets: ['latin'], weight: ['400', '500', '700'] });
 
 export const metadata = {
   title: 'Pomodorify',

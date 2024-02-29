@@ -31,18 +31,7 @@ export const Clock = () => {
     return (
         <div className="flex flex-col gap-3 items-center">
             <h1 className="text-accents-100 text-2xl">Music Clock Alarm</h1>
-            {digitalHour && (
-                <>
-                    <p className="text-3xl text-accents-100">{digitalHour}:{digitalMinute}:{digitalSeconds} {ampm}</p>
-                    {
-                        alarmConfig && (
-                            <p className="text-accents-100 font-semibold">Alarma activada a las {alarmTime.hour}:{alarmTime.minute} {alarmTime.amPm}</p>
-                        )
-                    }
-
-
-                </>)
-            }
+            {digitalHour && <p className="text-3xl text-accents-100">{digitalHour}:{digitalMinute}:{digitalSeconds} {ampm}</p>}
         </div>
     )
 }
