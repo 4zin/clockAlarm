@@ -7,7 +7,8 @@ export type ContextAlarmProps = {
     minutes: string;
     amPmOptions: string;
     alarmTime: AlarmTime;
-    setAlarmHandler: () => void
+    setAlarmHandler: () => void;
+    silenceAlarm: () => void;
     hourNumber: (string | number)[];
     minuteNumber: (string | number)[];
     hourHandler: (event: React.ChangeEvent<HTMLSelectElement>) => void

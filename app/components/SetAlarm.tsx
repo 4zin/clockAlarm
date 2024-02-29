@@ -38,7 +38,7 @@ export const SetAlarm = () => {
 
     return (
         <div className='flex flex-col'>
-            <div className='flex gap-4 mt-4 mb-4'>
+            <div className='flex gap-4 mt-4 mb-4 justify-center'>
                 <select
                     className={`bg-accents-400 py-1 px-[1rem] rounded-md shadow-black shadow-inner text-accents-100 font-medium`}
                     value={hour}
@@ -74,14 +74,13 @@ export const SetAlarm = () => {
 
             <div className='flex justify-center'>
                 <button
-                    className='bg-accents-400 hover:bg-[#bbbbea] p-2 rounded-md shadow-accents-100 shadow-sm text-accents-100 font-medium active:translate-y-1 transition-all duration-75'
+                    className='bg-accents-400 hover:bg-[#bbbbea] p-2 rounded-md shadow-accents-100 shadow-sm text-accents-100 font-semibold active:translate-y-1 transition-all duration-75'
                     onClick={setAlarmHandler}
                 >
                     Set Alarm
                 </button>
             </div>
             <AlarmModal />
-
         </div>
     )
 }

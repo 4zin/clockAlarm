@@ -24,7 +24,7 @@ const config: Config = {
           300: "#5A80AD",
           400: '#C3C3E6'
         }
-      }
+      },
     },
   },
   plugins: [],

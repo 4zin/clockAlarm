@@ -82,8 +82,14 @@ export function AlarmProvider({ children }: { children: React.ReactNode }) {
         }
     }
 
-
-
+    const silenceAlarm = () => {
+        setAlarmConfig(false)
+        setAlarmTime({
+            hour: 'Hour',
+            minute: 'Minutes',
+            amPm: 'AM-PM'
+        })
+    }
 
 
     const hourNumber = fixNumber(Array.from(Array(13).keys()))
@@ -110,6 +116,7 @@ export function AlarmProvider({ children }: { children: React.ReactNode }) {
             amPmOptions,
             alarmTime,
             setAlarmHandler,
+            silenceAlarm,
             hourNumber,
             minuteNumber,
             hourHandler,
