@@ -1,22 +1,36 @@
 'use client'
+import Dashboard from '@/components/Dashboard';
+import { useEffect, useState } from 'react';
 
-const AUTH_URL = 'https://accounts.spotify.com/authorize?client_id=7d24eed1746c4df492d0a540d4895ba9&response_type=code&redirect_uri=http://localhost:3000&scope=streaming%20user-read-email%20user-read-private%20user-library-read%20user-library-modify%20user-read-playback-state%20user-modify-playback-state';
 export function LogIn() {
 
-  const logInHandler = async () => {
-    try {
-      const clientId = '7d24eed1746c4df492d0a540d4895ba9';
-      const redirectUri = 'http://localhost:3000/';
-      const authorizationUrl = `https://accounts.spotify.com/authorize?client_id=${clientId}&response_type=code&redirect_uri=${redirectUri}&scope=streaming%20user-read-email%20user-read-private%20user-library-read%20user-library-modify%20user-read-playback-state%20user-modify-playback-state`;
+  const [code, setCode] = useState<string | null>(null);
+
+  useEffect(() => {
+    const getCodeFromUrl = () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const codeFromUrl = urlParams.get('code');
+      if (codeFromUrl) {
+        setCode(codeFromUrl);
+      }
+    }
+    getCodeFromUrl()
+  }, [])
+
+  const logInHandler = () => {
+    const clientId = '7d24eed1746c4df492d0a540d4895ba9';
+    const redirectUri = 'http://localhost:3000/';
+    const authorizationUrl = `https://accounts.spotify.com/authorize?client_id=${clientId}&response_type=code&redirect_uri=${redirectUri}&scope=streaming%20user-read-email%20user-read-private%20user-library-read%20user-library-modify%20user-read-playback-state%20user-modify-playback-state`;
+    if (typeof window !== 'undefined') {
       window.location.href = authorizationUrl;
-    } catch (error) {
-      console.error('Error al inciar sesion', error);
     }
   }
 
   return (
     <div>
-      <button onClick={logInHandler}>Log In</button>
+      {code ?
+        <Dashboard code={code} />
+        : <button onClick={logInHandler}>Log In</button>}
     </div>
   )
 }
