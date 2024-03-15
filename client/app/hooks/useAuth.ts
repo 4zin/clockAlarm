@@ -2,9 +2,9 @@ import { useState, useEffect } from "react";
 import axios from 'axios'
 
 export default function useAuth(code: string) {
-  const [accessToken, setAccessToken] = useState()
+  const [accessToken, setAccessToken] = useState('')
   const [refreshToken, setRefreshToken] = useState()
-  const [expiresIn, setExpiresIn] = useState()
+  const [expiresIn, setExpiresIn] = useState<number | undefined>(undefined)
 
   useEffect(() => {
     axios.post('http://localhost:3001/login', {
