@@ -19,19 +19,6 @@ app.use((_req, res, next) => {
 
 const PORT: number = Number(process.env.PORT ?? 3002)
 
-// const spotifyApi = new SpotifyWebApi({
-//   clientId: process.env.SPOTIFY_CLIENT_ID,
-//   clientSecret: process.env.SPOTIFY_CLIENT_SECRET
-// })
-
-// app.get('/login', (_req, res) => {
-//   const url = spotifyApi.createAuthorizeURL([
-//     'user-read-private',
-//     'user-read-email'
-//   ], 'state')
-//   res.redirect(url)
-// })
-
 app.post('/refresh', (req, res) => {
   const refreshToken = req.body.refreshToken
   const spotifyApi = new SpotifyWebApi({
