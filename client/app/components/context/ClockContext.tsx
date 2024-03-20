@@ -1,30 +1,25 @@
 'use client'
 
-import { AlarmTime } from '../../types'
-import { ContextAlarmProps } from '../../types'
-import { createContext, useState, useEffect } from "react";
+import { ContextClockProps } from '../../types'
+import { createContext, useState, useEffect, useContext } from "react";
+import { AlarmContext } from './AlarmContext';
 
-export const AlarmContext = createContext<ContextAlarmProps | undefined>(undefined)
+export const ClockContext = createContext<ContextClockProps | undefined>(undefined)
 
-export function AlarmProvider({ children }: { children: React.ReactNode }) {
+export function ClockProvider({ children }: { children: React.ReactNode }) {
+  const alarmContext = useContext(AlarmContext)
+
+  if (alarmContext === undefined) {
+    throw new Error('alarmContext must be used within AlarmProvider')
+  }
+
+  const { alarmTimeString, setAlarmConfig } = alarmContext
 
   //Clock
   const [digitalHour, setDigitalHour] = useState<string>('');
   const [digitalMinute, setDigitalMinute] = useState<string>('');
   const [digitalSeconds, setDigitalSeconds] = useState<string>('');
   const [ampm, setAmpm] = useState<string>('');
-
-  //Alarm
-  const [hour, setHour] = useState<string>('Hour')
-  const [minutes, setMinutes] = useState<string>('Minutes')
-  const [amPmOptions, setAmPmOptions] = useState<string>('AM-PM')
-  const [alarmTime, setAlarmTime] = useState<AlarmTime>({
-    hour: 'Hour',
-    minute: 'Minutes',
-    amPm: 'AM-PM'
-  })
-  const [alarmConfig, setAlarmConfig] = useState<boolean>(false)
-
 
   useEffect(() => {
     const updateClock = () => {
@@ -54,7 +49,6 @@ export function AlarmProvider({ children }: { children: React.ReactNode }) {
     }
 
     const currentTime = `${digitalHour}: ${digitalMinute} ${ampm}`
-    const alarmTimeString = `${alarmTime.hour}: ${alarmTime.minute} ${alarmTime.amPm}`
 
     if (currentTime === alarmTimeString) {
 
@@ -64,67 +58,16 @@ export function AlarmProvider({ children }: { children: React.ReactNode }) {
 
     setInterval(updateClock, 1000)
 
-  }, [digitalHour, digitalMinute, ampm, hour, minutes, amPmOptions, alarmTime])
-
-  const fixNumber = (value: number[]): (string | number)[] => {
-    return value.map(hour => (hour < 10 ? '0' + hour : hour));
-  };
-
-  const setAlarmHandler = () => {
-
-    if (hour !== 'Hour' && minutes !== 'Minutes' && amPmOptions !== 'AM-PM') {
-      setAlarmTime((prevAlarmTime) => ({
-        ...prevAlarmTime,
-        hour: hour,
-        minute: minutes,
-        amPm: amPmOptions
-      }))
-    }
-  }
-
-  const silenceAlarm = () => {
-    setAlarmConfig(false)
-    setAlarmTime({
-      hour: 'Hour',
-      minute: 'Minutes',
-      amPm: 'AM-PM'
-    })
-  }
-
-
-  const hourNumber = fixNumber(Array.from(Array(13).keys()))
-  const minuteNumber = fixNumber(Array.from(Array(60).keys()))
-
-  const hourHandler = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setHour(event.target.value)
-  }
-  const minuteHandler = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setMinutes(event.target.value)
-  }
-  const amPmHandler = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setAmPmOptions(event.target.value)
-  }
+  }, [digitalHour, digitalMinute, ampm])
 
   return (
-    <AlarmContext.Provider value={{
+    <ClockContext.Provider value={{
       digitalHour,
       digitalMinute,
       digitalSeconds,
-      ampm,
-      hour,
-      minutes,
-      amPmOptions,
-      alarmTime,
-      setAlarmHandler,
-      silenceAlarm,
-      hourNumber,
-      minuteNumber,
-      hourHandler,
-      minuteHandler,
-      amPmHandler,
-      alarmConfig
+      ampm
     }}>
       {children}
-    </AlarmContext.Provider>
+    </ClockContext.Provider>
   )
 }
