@@ -1,11 +1,22 @@
 'use client'
 
-import { useEffect, useContext } from 'react'
-import { AlarmContext } from './context/ClockContext'
-import { AlarmModal } from './AlarmModal'
+import { useEffect, useContext, useState } from 'react'
+import axios from 'axios'
+import SpotifyWebApi from 'spotify-web-api-node'
+import { AlarmContext } from '@/components/context/AlarmContext'
+import { AlarmModal } from '@/components/AlarmModal'
+import { AlarmTime } from '@/types'
+import useAuth from '@/hooks/useAuth'
 
 
-export const SetAlarm = () => {
+export const SetAlarm = ({ code }: { code: string }) => {
+
+  const accessToken = useAuth(code)
+  console.log(accessToken);
+  const spotifyApi = new SpotifyWebApi({
+    clientId: process.env.SPOTIFY_CLIENT_ID,
+    accessToken: accessToken,
+  })
 
 
   const alarmContext = useContext(AlarmContext)
@@ -18,15 +29,77 @@ export const SetAlarm = () => {
     minutes,
     amPmOptions,
     alarmTime,
-    setAlarmHandler,
+    setAlarmTime,
     hourNumber,
     minuteNumber,
     hourHandler,
     minuteHandler,
     amPmHandler,
+    alarmConfig
   } = alarmContext
 
+  const [alarmActive, setAlarmActive] = useState<boolean>(false)
 
+  // const playAlarm = async () => {
+  // try {
+
+  // const response = await axios.get('https://api.spotify.com/v1/me/player', {
+  //   headers: {
+  //     Authorization: `Bearer ${accessToken}`,
+  //     'Content-Type': 'application/json',
+  //   },
+  //   data: {
+  //     uris: ['spotify:track:1YqVJ2YSgwxWpfuENocF2t'],
+  //   }
+  // })
+
+
+  // console.log(response.data.actions.disallows);
+  // spotifyApi.play({
+  //   uris: ['spotify:track:1YqVJ2YSgwxWpfuENocF2t'],
+  // })
+
+  // } catch (error) {
+  //   console.error('Error al reproducir la canción:', error);
+  // }
+  // }
+
+  useEffect(() => {
+    if (alarmConfig === true) {
+      setAlarmActive(true)
+    } else {
+      setAlarmActive(false)
+    }
+  }, [alarmConfig])
+
+  useEffect(() => {
+
+    if (alarmActive === true) {
+      try {
+        spotifyApi.play({
+          uris: ['spotify:track:12usPU2WnqgCHAW1EK2dfd'],
+        })
+      } catch (error) {
+        console.error('Error al reproducir la cancion:', error);
+
+      }
+    }
+
+  }, [alarmActive])
+
+  const setAlarmHandler = () => {
+
+    if (hour !== 'Hour' && minutes !== 'Minutes' && amPmOptions !== 'AM-PM') {
+      const newAlarmTime: AlarmTime = {
+        hour: hour,
+        minute: minutes,
+        amPm: amPmOptions
+      }
+
+      // setAlarmActive(true)
+      setAlarmTime(newAlarmTime)
+    }
+  }
 
   useEffect(() => {
     console.log('Alarma seteada a las', alarmTime);

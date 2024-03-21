@@ -1,5 +1,5 @@
 import { useContext } from "react"
-import { AlarmContext } from "./context/ClockContext"
+import { AlarmContext } from "./context/AlarmContext"
 import { MuteIcon, PalaIcon } from "@/icons"
 
 export function AlarmModal() {
@@ -10,7 +10,16 @@ export function AlarmModal() {
     throw new Error('alarmContext must be used within AlarmProvider')
   }
 
-  const { alarmConfig, alarmTime, silenceAlarm } = alarmContext
+  const { alarmConfig, alarmTime, setAlarmConfig, setAlarmTime } = alarmContext
+
+  const silenceAlarm = () => {
+    setAlarmConfig(false)
+    setAlarmTime({
+      hour: 'Hour',
+      minute: 'Minutes',
+      amPm: 'AM-PM'
+    })
+  }
 
   return (
     <section className={`grid ${alarmConfig ? 'absolute' : 'hidden'}  w-screen h-screen top-0 left-0 place-items-center bg-[rgba(0,0,0,0.25)]`}>
