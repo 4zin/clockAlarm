@@ -1,23 +1,23 @@
 'use client'
 
-import { useEffect, useContext, useState } from 'react'
-import axios from 'axios'
-import SpotifyWebApi from 'spotify-web-api-node'
 import { AlarmContext } from '@/components/context/AlarmContext'
 import { AlarmModal } from '@/components/AlarmModal'
-import { AlarmTime } from '@/types'
+import { AlarmTime, SearchResultsProps } from '@/types'
 import useAuth from '@/hooks/useAuth'
+import TrackSearchResult from '@/components/TrackSearchResult'
+
+import { useEffect, useContext, useState } from 'react'
+import SpotifyWebApi from 'spotify-web-api-node'
 
 
 export const SetAlarm = ({ code }: { code: string }) => {
 
   const accessToken = useAuth(code)
-  console.log(accessToken);
+
   const spotifyApi = new SpotifyWebApi({
     clientId: process.env.SPOTIFY_CLIENT_ID,
     accessToken: accessToken,
   })
-
 
   const alarmContext = useContext(AlarmContext)
 
@@ -39,30 +39,9 @@ export const SetAlarm = ({ code }: { code: string }) => {
   } = alarmContext
 
   const [alarmActive, setAlarmActive] = useState<boolean>(false)
-
-  // const playAlarm = async () => {
-  // try {
-
-  // const response = await axios.get('https://api.spotify.com/v1/me/player', {
-  //   headers: {
-  //     Authorization: `Bearer ${accessToken}`,
-  //     'Content-Type': 'application/json',
-  //   },
-  //   data: {
-  //     uris: ['spotify:track:1YqVJ2YSgwxWpfuENocF2t'],
-  //   }
-  // })
-
-
-  // console.log(response.data.actions.disallows);
-  // spotifyApi.play({
-  //   uris: ['spotify:track:1YqVJ2YSgwxWpfuENocF2t'],
-  // })
-
-  // } catch (error) {
-  //   console.error('Error al reproducir la canción:', error);
-  // }
-  // }
+  const [uri, setUri] = useState([''])
+  const [search, setSearch] = useState('')
+  const [searchResults, setSearchResults] = useState<SearchResultsProps[]>([])
 
   useEffect(() => {
     if (alarmConfig === true) {
@@ -77,7 +56,7 @@ export const SetAlarm = ({ code }: { code: string }) => {
     if (alarmActive === true) {
       try {
         spotifyApi.play({
-          uris: ['spotify:track:12usPU2WnqgCHAW1EK2dfd'],
+          uris: uri
         })
       } catch (error) {
         console.error('Error al reproducir la cancion:', error);
@@ -85,7 +64,42 @@ export const SetAlarm = ({ code }: { code: string }) => {
       }
     }
 
-  }, [alarmActive])
+  }, [alarmActive, uri])
+
+  useEffect(() => {
+    if (!search) return setSearchResults([])
+    if (!accessToken) return
+
+    let cancel = false
+
+    spotifyApi.searchTracks(search).then(res => {
+      const tracks = res.body.tracks?.items ?? []
+
+      setSearchResults(
+        tracks.map(track => {
+          const smallestAlbumImage = track.album.images.reduce((smallest, image) => {
+            if (image.height !== undefined && smallest.height !== undefined) {
+              if (image.height < smallest.height) return image
+            }
+            return smallest
+          }, track.album.images[0])
+
+          return {
+            artist: track.artists[0].name,
+            title: track.name,
+            uri: track.uri,
+            albumUrl: smallestAlbumImage.url
+          }
+        })
+      )
+    })
+
+    return () => {
+      cancel = true
+    }
+    // console.log('Alarma seteada a las', alarmTime);
+
+  }, [alarmTime, search, accessToken])
 
   const setAlarmHandler = () => {
 
@@ -98,14 +112,9 @@ export const SetAlarm = ({ code }: { code: string }) => {
 
       // setAlarmActive(true)
       setAlarmTime(newAlarmTime)
+      setSearch('')
     }
   }
-
-  useEffect(() => {
-    console.log('Alarma seteada a las', alarmTime);
-  }, [alarmTime])
-
-
 
   return (
     <div className='flex flex-col'>
@@ -143,6 +152,29 @@ export const SetAlarm = ({ code }: { code: string }) => {
         </select>
       </div>
 
+      <div>
+
+      </div>
+
+      <div>
+        <input
+          type="search"
+          placeholder="Search for song"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className='text-black'
+        />
+
+        {searchResults && searchResults.map((track) => (
+          <div
+            key={track.uri}
+            onClick={() => setUri([track.uri])}
+          >
+            <TrackSearchResult track={track} />
+          </div>
+        ))}
+      </div>
+
       <div className='flex justify-center'>
         <button
           className='bg-accents-400 hover:bg-[#bbbbea] p-2 rounded-md shadow-accents-100 shadow-sm text-accents-100 font-semibold active:translate-y-1 transition-all duration-75'
@@ -151,7 +183,7 @@ export const SetAlarm = ({ code }: { code: string }) => {
           Set Alarm
         </button>
       </div>
-      <AlarmModal />
+      <AlarmModal accessToken={accessToken} />
     </div>
   )
 }

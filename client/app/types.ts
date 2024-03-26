@@ -44,12 +44,5 @@ export interface TrackSearchResultProps {
     title: string
     uri: string
     albumUrl: string
-  },
-  key: string,
-  chooseTrack: (track: {
-    artist: string
-    title: string
-    uri: string
-    albumUrl: string
-  }) => void
+  }
 }

@@ -1,8 +1,9 @@
 import { useContext } from "react"
 import { AlarmContext } from "./context/AlarmContext"
-import { MuteIcon, PalaIcon } from "@/icons"
+import { MuteIcon } from "@/icons"
+import SpotifyWebApi from "spotify-web-api-node"
 
-export function AlarmModal() {
+export function AlarmModal({ accessToken }: { accessToken: string }) {
 
   const alarmContext = useContext(AlarmContext)
 
@@ -12,7 +13,20 @@ export function AlarmModal() {
 
   const { alarmConfig, alarmTime, setAlarmConfig, setAlarmTime } = alarmContext
 
+  const spotifyApi = new SpotifyWebApi({
+    clientId: process.env.SPOTIFY_CLIENT_ID,
+    accessToken: accessToken
+  })
+
   const silenceAlarm = () => {
+
+    if (!alarmConfig) return
+    try {
+      spotifyApi.pause();
+    } catch (error) {
+      console.error('Error al pausar la canción:', error);
+    }
+
     setAlarmConfig(false)
     setAlarmTime({
       hour: 'Hour',
