@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import { SPOTIFY_CLIENT_ID } from '@/constants';
 import { SetAlarm } from './SetAlarm';
-import axios from 'axios';
+import Button from './Button';
 
 export function LogIn() {
 
@@ -52,12 +52,12 @@ export function LogIn() {
   }
 
   return (
-    <div>
+    <div className='flex flex-col items-center mt-2'>
       {code ?
         <div>
           <SetAlarm code={code} />
         </div>
-        : <button onClick={logInHandler}>Log In</button>}
+        : <Button text='Log In' onClick={logInHandler} />}
     </div>
   )
 }

@@ -8,6 +8,9 @@ import TrackSearchResult from '@/components/TrackSearchResult'
 
 import { useEffect, useContext, useState } from 'react'
 import SpotifyWebApi from 'spotify-web-api-node'
+import Button from './Button'
+
+import '../../styles/setAlarm.css'
 
 
 export const SetAlarm = ({ code }: { code: string }) => {
@@ -117,7 +120,7 @@ export const SetAlarm = ({ code }: { code: string }) => {
   }
 
   return (
-    <div className='flex flex-col'>
+    <div className='flex flex-col items-center justify-center'>
       <div className='flex gap-4 mt-4 mb-4 justify-center'>
         <select
           className={`bg-accents-400 py-1 px-[1rem] rounded-md shadow-black shadow-inner text-accents-100 font-medium`}
@@ -152,36 +155,32 @@ export const SetAlarm = ({ code }: { code: string }) => {
         </select>
       </div>
 
-      <div>
-
-      </div>
-
-      <div>
+      <div className='flex flex-col items-center w-full'>
         <input
           type="search"
           placeholder="Search for song"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className='text-black'
+          className='mb-4 w-60 bg-accents-400 py-1 px-2 rounded-md shadow-black shadow-inner text-lg text-accents-100 font-medium'
         />
 
-        {searchResults && searchResults.map((track) => (
-          <div
-            key={track.uri}
-            onClick={() => setUri([track.uri])}
-          >
-            <TrackSearchResult track={track} />
-          </div>
-        ))}
+        <div className={`${search ? 'w-auto h-52 overflow-y-auto overflow-x-hidden bg-accents-400' : 'w-auto h-0 overflow-hidden'}  rounded-md shadow-black p-[10px] mb-[20px] scrollbar`}>
+          {searchResults && searchResults.map((track) => (
+            <div
+              key={track.uri}
+              onClick={() => setUri([track.uri])}
+            >
+              <TrackSearchResult track={track} />
+            </div>
+          ))}
+        </div>
       </div>
 
       <div className='flex justify-center'>
-        <button
-          className='bg-accents-400 hover:bg-[#bbbbea] p-2 rounded-md shadow-accents-100 shadow-sm text-accents-100 font-semibold active:translate-y-1 transition-all duration-75'
+        <Button
+          text='Set Alarm'
           onClick={setAlarmHandler}
-        >
-          Set Alarm
-        </button>
+        />
       </div>
       <AlarmModal accessToken={accessToken} />
     </div>

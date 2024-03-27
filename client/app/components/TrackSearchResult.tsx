@@ -5,11 +5,13 @@ export default function TrackSearchResult({ track }: TrackSearchResultProps) {
 
   return (
     <div
-      className="cursor-pointer"
+      className="cursor-pointer flex items-center w-96 ml-2"
     >
-      <Image src={track.albumUrl} alt="Almbum Cover" width={64} height={64} />
-      <p>{track.title}</p>
-      <p>{track.artist}</p>
+      <Image src={track.albumUrl} alt="Almbum Cover" width={64} height={64} className="my-2" />
+      <div className="flex flex-col ml-2">
+        <p>{track.title}</p>
+        <p>{track.artist}</p>
+      </div>
     </div>
   )
 }

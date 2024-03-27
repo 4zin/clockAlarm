@@ -22,7 +22,21 @@ body {
   place-items: center;
   min-height: 100vh;
   color: rgb(var(--foreground-rgb));
-  background: #00A9A5;
+  background: #00a9a5;
+}
+
+body::-webkit-scrollbar {
+  width: 8px;
+}
+
+body::-webkit-scrollbar-track {
+  background: #2f2f2f;
+  border-radius: 10px;
+}
+
+body::-webkit-scrollbar-thumb {
+  background: #30011e;
+  border-radius: 10px;
 }
 
 @layer utilities {

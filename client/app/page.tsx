@@ -6,7 +6,6 @@ export default function Page() {
   return (
     <main>
       <Clock />
-      {/* <SetAlarm /> */}
       <LogIn />
     </main>
   )
