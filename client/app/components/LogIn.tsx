@@ -21,6 +21,7 @@ export function LogIn() {
   }, [])
 
   const logInHandler = () => {
+
     const clientId = SPOTIFY_CLIENT_ID;
     const redirectUri = 'http://localhost:3000/';
     const scopes = [
