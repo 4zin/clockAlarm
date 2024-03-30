@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from 'axios'
+import Cookies from 'js-cookie'
 
 export default function useAuth(code: string) {
   const [accessToken, setAccessToken] = useState('')
@@ -7,16 +8,28 @@ export default function useAuth(code: string) {
   const [expiresIn, setExpiresIn] = useState<number | undefined>(undefined)
 
   useEffect(() => {
-    axios.post('http://localhost:3001/login', {
-      code
-    }).then(res => {
-      setAccessToken(res.data.accessToken)
-      setRefreshToken(res.data.refreshToken)
-      setExpiresIn(res.data.expiresIn)
-      window.history.pushState({}, '', '/')
-    }).catch(() => {
-      window.location.href = '/'
-    })
+    const fetchData = async () => {
+      try {
+        const response = await axios.post('http://localhost:3001/login', { code }, { withCredentials: true })
+        const { accessToken: responseAccessToken, refreshToken, expiresIn } = response.data
+
+        const accessTokenFromCookie = Cookies.get('accessToken')
+
+        setAccessToken(accessTokenFromCookie || responseAccessToken)
+
+        setRefreshToken(refreshToken)
+        setExpiresIn(expiresIn)
+        window.history.pushState({}, '', '/')
+
+
+        window.history.pushState({}, '', '/')
+      } catch (error) {
+        window.location.href = '/'
+      }
+    }
+
+    fetchData()
+
   }, [code])
 
   useEffect(() => {

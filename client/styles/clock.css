@@ -19,15 +19,24 @@ header p {
 
 @media screen and (min-width: 360px) and (max-width: 640px) {
   header {
-    background: red;
     justify-content: center;
+  }
+
+  header h1 {
+    font-size: 60px;
   }
 
   header p {
     font-size: 1.8rem;
   }
+}
 
-  h1 {
-    font-size: 60px;
+@media screen and (min-width: 640px) and (max-width: 768px) {
+  header h1 {
+    font-size: 6rem;
+  }
+
+  header p {
+    font-size: 2rem;
   }
 }
