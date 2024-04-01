@@ -9,12 +9,12 @@ dotenv.config()
 const app = express()
 app.use(express.json())
 app.use(cors({
-  origin: 'http://localhost:3000',
+  origin: process.env.SPOTIFY_REDIRECT_URI,
   credentials: true
 }))
 app.use(bodyParser.json())
 app.use((_req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000')
+  res.setHeader('Access-Control-Allow-Origin', '*')
   res.setHeader('Access-Control_Allow-Methods', 'GET, POST, PUT, PATCH, DELETE')
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization')
   next()
