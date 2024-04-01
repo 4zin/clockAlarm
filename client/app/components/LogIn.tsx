@@ -23,7 +23,8 @@ export function LogIn() {
   const logInHandler = () => {
 
     const clientId = SPOTIFY_CLIENT_ID;
-    const redirectUri = 'https://clockalarm-production.up.railway.app/';
+    const redirectUri = 'https://pomodorify.up.railway.app/';
+    // const redirectUri = `http://localhost:3000/`;
     const scopes = [
       'ugc-image-upload',
       'user-read-playback-state',
