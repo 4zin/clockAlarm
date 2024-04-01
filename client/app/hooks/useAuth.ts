@@ -10,12 +10,11 @@ export default function useAuth(code: string) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.post('http://localhost:6973/login', { code }, { withCredentials: true })
+        const response = await axios.post('http://localhost:3001/login', { code })
         const { accessToken: responseAccessToken, refreshToken, expiresIn } = response.data
 
-        const accessTokenFromCookie = Cookies.get('accessToken')
 
-        setAccessToken(accessTokenFromCookie || responseAccessToken)
+        setAccessToken(responseAccessToken)
 
         setRefreshToken(refreshToken)
         setExpiresIn(expiresIn)
@@ -37,7 +36,7 @@ export default function useAuth(code: string) {
 
     const interval = setInterval(() => {
 
-      axios.post('http://localhost:6973/refresh', {
+      axios.post('http://localhost:3001/refresh', {
         refreshToken
       }).then(res => {
         setRefreshToken(res.data.refreshToken)

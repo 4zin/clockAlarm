@@ -36,9 +36,6 @@ app.post('/login', (req, res) => {
     .then(data => {
       const { access_token: accessToken, refresh_token: refreshToken, expires_in: expiresIn } = data.body
 
-      res.cookie('accessToken', accessToken, { httpOnly: false, sameSite: 'none', secure: true })
-      res.cookie('refreshToken', refreshToken, { httpOnly: false, sameSite: 'none', secure: true })
-
       res.json({ accessToken, refreshToken, expiresIn })
     })
     .catch(() => {
