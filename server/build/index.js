@@ -13,14 +13,14 @@ dotenv_1.default.config();
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
 app.use((0, cors_1.default)({
-    origin: 'https://pomodorify.up.railway.app',
+    origin: 'https://pomodorify.up.railway.app/',
     // origin: 'http://localhost:3000',
     credentials: true
 }));
 app.use(body_parser_1.default.json());
 app.use((_req, res, next) => {
-    // res.setHeader('Access-Control-Allow-Origin', 'https://pomodorify.up.railway.app')
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+    res.setHeader('Access-Control-Allow-Origin', 'https://pomodorify.up.railway.app/');
+    // res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000')
     res.setHeader('Access-Control_Allow-Methods', 'GET, POST, PUT, PATCH, DELETE');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
     next();
@@ -36,8 +36,6 @@ app.post('/login', (req, res) => {
     spotifyApi.authorizationCodeGrant(code)
         .then(data => {
         const { access_token: accessToken, refresh_token: refreshToken, expires_in: expiresIn } = data.body;
-        res.cookie('accessToken', accessToken, { httpOnly: false, sameSite: 'none', secure: true });
-        res.cookie('refreshToken', refreshToken, { httpOnly: false, sameSite: 'none', secure: true });
         res.json({ accessToken, refreshToken, expiresIn });
     })
         .catch(() => {
